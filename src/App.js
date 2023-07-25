@@ -2,10 +2,20 @@ import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
 import { db } from './firebaseconfig';
-import {collection, getDocs} from "firebase/firestore"
+import {collection, getDocs, addDoc} from "firebase/firestore"
 function App() {
+
+   const [NewName, setNewName] = useState("");
+   const [NewAge, setNewAge] = useState(0);
       const [users, setUsers] = useState([]);
      const usersCollectionRef = collection(db, "users")
+
+     const createUser = async () =>
+     {
+      await addDoc  (usersCollectionRef, { name: NewName, age: NewAge})
+     }
+
+
      useEffect(() => {
       const getUsers = async () =>
       {
@@ -16,8 +26,13 @@ function App() {
      }, []);
 
    return   ( 
-   
+
    <div className="App"> 
+   <input placeholder='Name...' onChange={(event) =>{
+    setNewName(event.target.value);
+   }}></input>
+   <input type = "number" placeholder='Age...'></input>
+   <button onClick={createUser}> Create User</button>
    {users.map((user) =>
    {
     return<div> <h1>Name: {user.name}</h1>
